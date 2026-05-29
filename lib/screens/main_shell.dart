@@ -26,7 +26,7 @@ class _MainShellState extends State<MainShell> {
       body: Column(
         children: [
         //  SafeArea(bottom: false, child: StatsBar(key: ValueKey(CharacterService.current?.xp)),),
-         Expanded(
+         Expanded( 
             child: IndexedStack(
               index: _selectedIndex,
               children: _screens,
@@ -36,7 +36,11 @@ class _MainShellState extends State<MainShell> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Quests'),

@@ -27,7 +27,6 @@ class CharacterAdapter extends TypeAdapter<Character> {
       xp: fields[7] as int,
       level: fields[8] as int,
       coins: fields[9] as int,
-      spirit: fields[10] as int,
       wisdomXp: fields[11] as int,
       vitalityXp: fields[12] as int,
       artistryXp: fields[13] as int,
@@ -42,7 +41,7 @@ class CharacterAdapter extends TypeAdapter<Character> {
       outfit: fields[22] as String,
       unlockedItems: (fields[23] as List?)?.cast<String>(),
       inventoryItems: (fields[24] as List?)?.cast<InventoryItem>(),
-    );
+    )..unusedSpirit = fields[10] as int;
   }
 
   @override
@@ -70,7 +69,7 @@ class CharacterAdapter extends TypeAdapter<Character> {
       ..writeByte(9)
       ..write(obj.coins)
       ..writeByte(10)
-      ..write(obj.spirit)
+      ..write(obj.unusedSpirit)
       ..writeByte(11)
       ..write(obj.wisdomXp)
       ..writeByte(12)
