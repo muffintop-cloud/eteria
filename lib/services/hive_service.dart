@@ -14,5 +14,16 @@ class HiveService {
     await Hive.openBox<Character>('characterBox');
     await Hive.openBox<Quest>('questBox');
 
+    final characterBox = Hive.box<Character>('characterBox');
+    if (characterBox.isEmpty) {
+      await characterBox.put(0, Character(
+        name: 'tester',
+        classIndex: 0,
+        body: 'body_1',
+        hair: 'hair_1',
+        eyes: 'eye_1',
+        outfit: 'outfit_1'
+      ));
+    }
   }
 }

@@ -127,7 +127,7 @@ class Character extends HiveObject {
   String get bodyAssetPath { return 'assets/body/$body.png'; }
   String get hairAssetPath { return 'assets/hair/$hair.png'; }
   String get eyesAssetPath { return 'assets/eyes/$eyes.png'; }
-  String get outfitAssetPath { return 'assets/outfit/$outfit.png'; }
+  String get outfitAssetPath { return 'assets/outfits/$outfit.png'; }
 
   CharacterClass get characterClass {
     return CharacterClass.values[classIndex];
