@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Character? character = CharacterService.current; // reads the character from hive every rebuild
         if (character == null) { return const SizedBox.shrink(); } // if there's no character, returns nothing
 
-        double hpProgress = character.hp / character.maxHp; // shows hp as a 0.0-1.0 value for the progress bar
+        double hpCurrent = character.hp / character.maxHp; // shows hp as a 0.0-1.0 value for the progress bar
 
         String traitLabel = character.characterClass.traitNeedLabel; // defined in CharacterClass
 
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(height: 10),
                           HpBar(
-                            value: hpProgress,
+                            value: hpCurrent,
                             current: character.hp,
                             max: character.maxHp,
                           )

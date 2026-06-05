@@ -21,11 +21,11 @@ class CharacterDisplay extends StatelessWidget {
           fit: BoxFit.contain,
         ),
         Image.asset(
-          character.hairAssetPath,
+          character.eyesAssetPath,
           fit: BoxFit.contain,
         ),
         Image.asset(
-          character.eyesAssetPath,
+          character.hairAssetPath,
           fit: BoxFit.contain,
         ),
         Image.asset(

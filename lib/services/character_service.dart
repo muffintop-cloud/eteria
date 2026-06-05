@@ -95,6 +95,14 @@ class CharacterService {
     notify();
   } // update character's needs, clamp ensures values are between 0 and 100
 
+  static Future<void> restoreHp(int amount) async {
+    Character? c = current;
+    if (c == null) return;
+    c.hp = (c.hp + amount).clamp(0, c.maxHp);
+    await c.save();
+    notify();
+  }
+
   static Future<void> applyDailyReset() async {
     Character? c = current;
     if (c == null) return;

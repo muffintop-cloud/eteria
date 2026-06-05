@@ -61,8 +61,17 @@ class QuestService {
   } // converts: hive quest box --> map --> list of map entries (because lists are easier to display in ui)
 
   static Future <({int xp, int coins})> toggleComplete(int key) async {
-    final quest = _box.get(key);
+    Quest? quest = _box.get(key);
     if (quest == null) return (xp: 0, coins: 0);
+
+    // chech if character is allowed to complete a quest given their hpState
+    Character? character = CharacterService.current;
+    if (character != null && quest.isCompleted == false) {
+      bool allowed = character.canDoDifficultQuest(quest.difficulty, quest.category);
+      if (!allowed) {
+        return (xp: 0, coins: 0);
+      } // returns zeros, quest was not completed
+    }
 
     quest.isCompleted = !quest.isCompleted; // toggle completion
     await quest.save();
@@ -70,13 +79,37 @@ class QuestService {
 
     if(!quest.isCompleted) return (xp: 0, coins: 0); // uncompleting a quest gives no rewards
 
-    Character? character = CharacterService.current;
     int xpEarned = quest.xpReward;
     int coinsEarned = quest.coinReward;
 
     if (character != null) {
       await NeedsService.applyQuestDrain(character, quest.skillIndices ?? []);
       // if skillIndices is null, pass an empty list instead
+
+      int hpRestored;
+
+      switch(quest.category) {
+        case QuestCategory.side: 
+          hpRestored = 5;
+          break;
+        case QuestCategory.daily:
+          hpRestored = 10;
+          break;
+        case QuestCategory.main:
+          hpRestored = 20;
+          break;
+      }
+
+      bool matchesTraitSkill = quest.skillIndices.any((int index) {
+        if (index < 0 || index >= Skill.values.length) return false;
+        return Skill.values[index] == character.traitSkill;
+      });
+
+      if (matchesTraitSkill) {
+        hpRestored += 10; // extra hp gained when skill matches the class
+      } // e.g. scholar completing a wisdom-related quest
+
+      await CharacterService.restoreHp(hpRestored);
     }
 
     await CharacterService.addXp(xpEarned); // award xp

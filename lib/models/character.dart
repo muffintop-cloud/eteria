@@ -1,11 +1,13 @@
 import 'package:eteria/models/character_class.dart';
 import 'package:eteria/models/inventory_item.dart';
+import 'package:eteria/models/quest.dart';
 import 'package:eteria/models/skill.dart';
 import 'package:hive/hive.dart';
 
 part 'character.g.dart';
 
 enum NeedState { stable, low, critical, depleted }
+enum HpState { healthy, tired, fatigued, exhausted }
 
 @HiveType(typeId: 0)
 class Character extends HiveObject {
@@ -223,6 +225,27 @@ class Character extends HiveObject {
       case NeedState.depleted: return 30;
     }
   } // hp penalty based on need state (calculated at daily reset)
+
+  HpState get hpState {
+    switch (hp) {
+      case <= 0: return HpState.exhausted;
+      case <= 39: return HpState.fatigued;
+      case <= 69: return HpState.tired;
+      default: return HpState.healthy;
+    }
+  } // character's hp state is used to determine what the character can and cannot do
+
+  bool canDoDifficultQuest(Difficulty difficulty, QuestCategory category) {
+    switch(hpState) {
+      case HpState.exhausted: // exhausted character can only do low-diff. daily quests
+        return category == QuestCategory.daily && difficulty == Difficulty.low;
+      case HpState.fatigued: // fatigued character cannot do high-diff. quests
+        return difficulty != Difficulty.high;
+      case HpState.tired: // tired/healthy character has no restrictions
+      case HpState.healthy: 
+        return true;
+    }
+  }
 
   void applyDailyReset() {
     int penalty = hpPenalty(hunger) + hpPenalty(thirst) + hpPenalty(traitNeed);
