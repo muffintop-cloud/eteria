@@ -33,6 +33,14 @@ class CharacterService {
     notify();
   }
 
+  static Future<void> updateName(String newName) async {
+    Character? c = current;
+    if (c == null) return;
+    c.name = newName;
+    await c.save();
+    notify();
+  }
+
   static Future<void> updateAppearance({
     required String body,
     required String hair,
@@ -84,13 +92,13 @@ class CharacterService {
   static Future<void> updateNeeds({
     int? hunger,
     int? thirst,
-    int? traitNeed,
+    int? classNeed,
   }) async {
     Character? c = current; 
     if (c == null) return;
     if (hunger != null) c.hunger = hunger.clamp(0, 100);
     if (thirst != null) c.thirst = thirst.clamp(0, 100);
-    if (traitNeed != null) c.traitNeed = traitNeed.clamp(0, 100);
+    if (classNeed != null) c.classNeed = classNeed.clamp(0, 100);
     await c.save();
     notify();
   } // update character's needs, clamp ensures values are between 0 and 100

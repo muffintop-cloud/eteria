@@ -84,7 +84,8 @@ class AppStyles {
 
   static const TextStyle classLabel = TextStyle(
     fontSize: 11,
-    fontWeight: FontWeight.bold
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
   );
 
   static const TextStyle description = TextStyle(
@@ -151,7 +152,7 @@ class AppStyles {
   // needs
   static const Color hungerColor = Color.fromARGB(255, 255, 100, 100);
   static const Color thirstColor = Color.fromARGB(255, 171, 209, 255);
-  static const Color traitColor = Color.fromARGB(255, 176, 255, 111);
+  static const Color classNeedColor = Color.fromARGB(255, 176, 255, 111);
   static const Color hpColor = Color.fromARGB(255, 255, 35, 72);
 
   // coins
@@ -161,10 +162,10 @@ class AppStyles {
   static String deadlineFormat(DateTime d) {
     final now = DateTime.now();
     final diff = d.difference(DateTime(now.year, now.month, now.day)).inDays;
-    if (diff == 0) { return 'Due today'; }
-    else if (diff == 1) { return 'Due tomorrow'; }
+    if (diff == 0) { return 'Today'; }
+    else if (diff == 1) { return 'Tomorrow'; }
     else if (diff < 0) { return 'Overdue by ${-diff} day(s)'; }
-    else { return 'Due in $diff day(s)'; }
+    else { return '$diff day(s)'; }
   }
 
   // container decorations

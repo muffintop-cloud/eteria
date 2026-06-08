@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ShopItemType { cosmetic, consumable }
+enum ShopItemType { cosmetic }
 enum ShopCurrency { coins }
 
 class ShopItem {
@@ -21,4 +21,42 @@ class ShopItem {
     required this.icon,
     this.cosmeticCategory,
   });
+}
+
+class ShopCatalogue {
+  static final List<ShopItem> allItems = [
+    ShopItem(
+      id: 'eye_6',
+      name: 'Sparkly Eyes',
+      description: 'A rare eye style from the deep forest.',
+      price: 80,
+      type: ShopItemType.cosmetic,
+      icon: Icons.remove_red_eye,
+      cosmeticCategory: 'eyes',
+    ),
+
+    ShopItem(
+      id: 'hair_6',
+      name: 'Golden Hair',
+      description: 'Hair worthy of a princess.',
+      price: 120,
+      type: ShopItemType.cosmetic,
+      icon: Icons.face_retouching_natural,
+      cosmeticCategory: 'hair',
+    ),
+
+    ShopItem(
+      id: 'hair_7',
+      name: 'Ancient Curls',
+      description: 'Messy curls for a seasoned adventurer.',
+      price: 100,
+      type: ShopItemType.cosmetic,
+      icon: Icons.face_retouching_natural,
+      cosmeticCategory: 'hair',
+    ),
+  ];
+
+  static List<ShopItem> get cosmeticItems {
+    return allItems;
+  }
 }
