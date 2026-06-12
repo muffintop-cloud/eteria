@@ -5,6 +5,7 @@ import 'package:eteria/services/needs_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:eteria/models/quest.dart';
+import 'package:flutter/foundation.dart';
 
 class QuestService {
   static Box<Quest> get _box => Hive.box<Quest>('questBox');
@@ -29,10 +30,10 @@ class QuestService {
 
     int? deadlineTimestamp;
     if (category == QuestCategory.daily) {
-        deadlineTimestamp = null; // daily quests don't have a deadline, they automatically repeat every day
-      } else {
-        deadlineTimestamp = deadline?.millisecondsSinceEpoch;
-      }
+      deadlineTimestamp = null; // daily quests don't have a deadline, they automatically repeat every day
+    } else {
+      deadlineTimestamp = deadline?.millisecondsSinceEpoch;
+    }
 
     final quest = Quest(
       title: title,
@@ -53,9 +54,7 @@ class QuestService {
     for(var entry in questMap.entries) {
       int key = entry.key as int; 
       Quest quest = entry.value;
-      questList.add(
-        MapEntry(key, quest),
-      );
+      questList.add(MapEntry(key, quest));
     }
     return questList;
   } // converts: hive quest box --> map --> list of map entries (because lists are easier to display in ui)
@@ -67,7 +66,7 @@ class QuestService {
     // chech if character is allowed to complete a quest given their hpState
     Character? character = CharacterService.current;
     if (character != null && quest.isCompleted == false) {
-      bool allowed = character.canDoDifficultQuest(quest.difficulty, quest.category);
+      bool allowed = character.canCompleteQuest(quest.difficulty, quest.category);
       if (!allowed) {
         return (xp: 0, coins: 0);
       } // returns zeros, quest was not completed
@@ -100,12 +99,12 @@ class QuestService {
           break;
       }
 
-      bool matchesTraitSkill = quest.skillIndices.any((int index) {
+      bool matchesClassSkill = quest.skillIndices!.any((int index) {
         if (index < 0 || index >= Skill.values.length) return false;
-        return Skill.values[index] == character.traitSkill;
+        return Skill.values[index] == character.classSkill;
       });
 
-      if (matchesTraitSkill) {
+      if (matchesClassSkill) {
         hpRestored += 10; // extra hp gained when skill matches the class
       } // e.g. scholar completing a wisdom-related quest
 
@@ -119,7 +118,7 @@ class QuestService {
       if (skillIndex >= 0 && skillIndex < Skill.values.length) {
         Skill skill = Skill.values[skillIndex];
         int skillXp = xpEarned;
-        if (character != null && skill == character.traitSkill){
+        if (character != null && skill == character.classSkill){
           skillXp = (skillXp * 1.2).round();
         } // if this skill matches the character's class skill --> +20% skill xp --> e.g. scholar gets +20% wisdom xp
         await CharacterService.addSkillXp(skill, skillXp);
@@ -141,4 +140,20 @@ class QuestService {
     await _box.delete(key);
     _notify();
   }
+
+  static Future<void> resetDailyQuests() async {
+    for (final quest in _box.values) {
+      if (quest.category == QuestCategory.daily) {
+        quest.isCompleted = false;
+
+        if (quest.objectivesDone != null) {
+          for (int i = 0; i < quest.objectivesDone!.length; i++) {
+            quest.objectivesDone![i] = false;
+          }
+        }
+        await quest.save();
+      }
+    }
+    _notify();
+  } // resetDailyQuests is called every day by NeedsService.triggerDailyReset()
 }

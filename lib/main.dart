@@ -1,10 +1,12 @@
 import 'package:eteria/screens/main_shell.dart';
 import 'package:eteria/services/hive_service.dart';
+import 'package:eteria/services/needs_service.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveService.init();
+  await NeedsService.checkForDailyReset();
   runApp(const MyApp());
 }
 

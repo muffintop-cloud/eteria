@@ -23,7 +23,7 @@ class HpBar extends StatelessWidget {
             const Icon(Icons.favorite, color: AppStyles.hpColor, size: 13),
             const SizedBox(width: 4),
             Text(
-              '$current / $max HP',
+              '$current/$max',
               style: AppStyles.hpLabel,
             ),
           ],

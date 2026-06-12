@@ -19,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
   List<MapEntry<int, Quest>> _dailyQuests = []; // list for showing daily quests --> starts empty, gets filled when _loadDailies() runs
 
   @override
@@ -27,8 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadDailies(); // load daily quests
 
-  CharacterService.notifier.addListener(_loadDailies);
-  QuestService.notifier.addListener(_loadDailies);
+    CharacterService.notifier.addListener(_loadDailies);
+    QuestService.notifier.addListener(_loadDailies);
   }
 
   @override
@@ -39,13 +38,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadDailies() {
-    if (!mounted) return; 
+    if (!mounted) return;
 
     setState(() {
       _dailyQuests = QuestService.getAllQuests().where((entry) {
         return entry.value.category == QuestCategory.daily;
-      }) .toList();
+      }).toList();
     });
+  }
+
+  Future<void> _testDailyReset() async {
+    await NeedsService.triggerDailyReset();
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Daily reset executed')));
   }
 
   Future<void> _toggleDaily(int key) async {
@@ -57,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if(!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Hunger +${NeedsService.hungerRestoreAmount}',
+        content: Text(
+          '+${NeedsService.hungerRestoreAmount} Hunger\n+${NeedsService.foodHpRestoreAmount} HP',
         ),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -70,8 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if(!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Thirst +${NeedsService.thirstRestoreAmount}',
-        ),
+        content: Text('Thirst +${NeedsService.thirstRestoreAmount}'),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
       ),
@@ -88,52 +95,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
         double hpCurrent = character.hp / character.maxHp; // shows hp as a 0.0-1.0 value for the progress bar
 
-        String traitLabel = character.characterClass.traitNeedLabel; // defined in CharacterClass
+        String classNeedLabel = character.characterClass.classNeedLabel; // defined in CharacterClass
 
-        return SingleChildScrollView( // makes the screen scrollable 
+        return SingleChildScrollView( // makes the screen scrollable
           padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IntrinsicHeight( // makes all row's children stretch to be the same hegiht as the taller child
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch, // makes all children fill the full height of IntrinsicHeight
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: CharacterDisplay( 
-                                character: character
-                              )
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: const EdgeInsets.all(12),
+
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: CharacterDisplay(character: character),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          HpBar(
-                            value: hpCurrent,
-                            current: character.hp,
-                            max: character.maxHp,
-                          )
-                        ],
+                            const SizedBox(height: 10),
+                            HpBar(
+                              value: hpCurrent,
+                              current: character.hp,
+                              max: character.maxHp,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     ),
                     const SizedBox(width: 12),
 
-                    // need meters: 
+                    // need meters:
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           NeedMeter(
                             value: character.hunger / 100,
+                            rawValue: character.hunger,
                             color: Colors.red,
                             icon: Icons.restaurant,
                             label: 'Hunger',
@@ -144,16 +153,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               NeedMeter(
                                 value: character.thirst / 100,
+                                rawValue: character.thirst,
                                 color: Colors.blue,
                                 icon: Icons.water_drop,
                                 label: 'Thirst',
                               ),
                               const SizedBox(width: 16),
                               NeedMeter(
-                                value: character.traitNeed / 100,
+                                value: character.classNeed / 100,
+                                rawValue: character.classNeed,
                                 color: Colors.green,
                                 icon: Icons.self_improvement,
-                                label: traitLabel,
+                                label: classNeedLabel,
                               ),
                             ],
                           ),
@@ -169,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: _LogButton(
                       icon: Icons.restaurant,
-                      label: 'LogFood',
+                      label: 'Log Food',
                       sublabel: '+${NeedsService.hungerRestoreAmount} Hunger',
                       color: Colors.red,
                       onTap: _logFood,
@@ -185,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: _logWater,
                     ),
                   ),
+                  const SizedBox(width: 12),
                 ],
               ),
               const SizedBox(height: 12),
@@ -192,10 +204,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 dailyQuests: _dailyQuests,
                 onToggle: _toggleDaily,
               ),
+              Row(
+                children: [
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _testDailyReset,
+                      child: const Text('Test Daily Reset'),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         );
-      }
+      },
     );
   }
 }
@@ -214,19 +237,16 @@ class _LogButton extends StatelessWidget {
     required this.color,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector( // makes a widget tappable
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6,),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
-          border: Border.all(
-            color: color.withValues(alpha: 0.4),
-            width: 1,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.4), width: 1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -239,11 +259,15 @@ class _LogButton extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, color: color)
+                  style: AppStyles.bodyText.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color),
                 ),
                 Text(
                   sublabel,
-                  style: AppStyles.labelSmall.copyWith(color: color.withAlpha(1)),
+                  style: AppStyles.labelSmall.copyWith(
+                    color: color.withValues(alpha: 0.8),
+                  ),
                 ),
               ],
             ),

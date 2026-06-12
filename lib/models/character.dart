@@ -33,7 +33,7 @@ class Character extends HiveObject {
   int thirst;
 
   @HiveField(6)
-  int traitNeed; // class-based need
+  int classNeed; // class-based need
 
   // xp and level
   @HiveField(7)
@@ -95,6 +95,9 @@ class Character extends HiveObject {
   @HiveField(24)
   List<InventoryItem>? inventoryItems;
 
+  @HiveField(25)
+  String? lastResetDate;
+
   Character({
     required this.name,
     required this.classIndex,
@@ -102,7 +105,7 @@ class Character extends HiveObject {
     this.maxHp = 100,
     this.hunger = 100,
     this.thirst = 100,
-    this.traitNeed = 100,
+    this.classNeed = 100,
     this.xp = 0,
     this.level = 1,
     this.coins = 0,
@@ -120,6 +123,7 @@ class Character extends HiveObject {
     this.outfit = 'outfit_1',
     List<String>? unlockedItems, // optional constructor parameters, can be null
     List<InventoryItem>? inventoryItems,
+    this.lastResetDate,
   }) {
     this.unlockedItems = unlockedItems ?? []; // if null, initialize as empty list
     this.inventoryItems = inventoryItems ?? [];
@@ -165,14 +169,14 @@ class Character extends HiveObject {
     } 
   } // method to gain xp and handle leveling up
 
-  Skill get traitSkill {
+  Skill get classSkill {
     switch (characterClass) {
       case CharacterClass.scholar: return Skill.wisdom;
       case CharacterClass.warrior: return Skill.vitality;
       case CharacterClass.artisan: return Skill.artistry;
       case CharacterClass.bard: return Skill.charisma;
     }
-  } // get the skill associated with the character's class (trait need)
+  } // get the skill associated with the character's class (class need)
 
   void addSkillXp(Skill s, int amount) {
     switch(s) {
@@ -235,7 +239,7 @@ class Character extends HiveObject {
     }
   } // character's hp state is used to determine what the character can and cannot do
 
-  bool canDoDifficultQuest(Difficulty difficulty, QuestCategory category) {
+  bool canCompleteQuest(Difficulty difficulty, QuestCategory category) {
     switch(hpState) {
       case HpState.exhausted: // exhausted character can only do low-diff. daily quests
         return category == QuestCategory.daily && difficulty == Difficulty.low;
@@ -247,8 +251,13 @@ class Character extends HiveObject {
     }
   }
 
+  bool hasUnlocked(String itemId) {
+    if (unlockedItems == null) return false;
+    return unlockedItems!.contains(itemId);
+  }
+
   void applyDailyReset() {
-    int penalty = hpPenalty(hunger) + hpPenalty(thirst) + hpPenalty(traitNeed);
+    int penalty = hpPenalty(hunger) + hpPenalty(thirst) + hpPenalty(classNeed);
     hp = (hp - penalty).clamp(0, maxHp);
   } // apply hp penalty based on needs' states at daily reset
 }

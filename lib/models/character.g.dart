@@ -23,7 +23,7 @@ class CharacterAdapter extends TypeAdapter<Character> {
       maxHp: fields[3] as int,
       hunger: fields[4] as int,
       thirst: fields[5] as int,
-      traitNeed: fields[6] as int,
+      classNeed: fields[6] as int,
       xp: fields[7] as int,
       level: fields[8] as int,
       coins: fields[9] as int,
@@ -41,13 +41,14 @@ class CharacterAdapter extends TypeAdapter<Character> {
       outfit: fields[22] as String,
       unlockedItems: (fields[23] as List?)?.cast<String>(),
       inventoryItems: (fields[24] as List?)?.cast<InventoryItem>(),
+      lastResetDate: fields[25] as String?,
     )..unusedSpirit = fields[10] as int;
   }
 
   @override
   void write(BinaryWriter writer, Character obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(26)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -61,7 +62,7 @@ class CharacterAdapter extends TypeAdapter<Character> {
       ..writeByte(5)
       ..write(obj.thirst)
       ..writeByte(6)
-      ..write(obj.traitNeed)
+      ..write(obj.classNeed)
       ..writeByte(7)
       ..write(obj.xp)
       ..writeByte(8)
@@ -97,7 +98,9 @@ class CharacterAdapter extends TypeAdapter<Character> {
       ..writeByte(23)
       ..write(obj.unlockedItems)
       ..writeByte(24)
-      ..write(obj.inventoryItems);
+      ..write(obj.inventoryItems)
+      ..writeByte(25)
+      ..write(obj.lastResetDate);
   }
 
   @override

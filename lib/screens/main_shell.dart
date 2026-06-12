@@ -1,8 +1,9 @@
+import 'package:eteria/screens/title_screen.dart';
+import 'package:eteria/services/character_service.dart';
 import 'package:eteria/widgets/stats_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/screens/home_screen.dart';
 import 'package:eteria/screens/quests_screen.dart';
-import 'package:eteria/screens/world_screen.dart';
 import 'package:eteria/screens/shop_screen.dart';
 import 'package:eteria/screens/character_screen.dart';
 
@@ -21,10 +22,25 @@ class _MainShellState extends State<MainShell> {
   final List<Widget> _screens = const [
     HomeScreen(),
     QuestsScreen(),
-    WorldScreen(),
     ShopScreen(),
     CharacterScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+      if (!CharacterService.exists) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) {
+              return const TitleScreen();
+            },
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +67,6 @@ class _MainShellState extends State<MainShell> {
             icon: Icon(Icons.assignment),
             label: 'Quests',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.public), label: 'World'),
           BottomNavigationBarItem(icon: Icon(Icons.storefront), label: 'Shop'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Character'),
         ],

@@ -37,7 +37,7 @@ extension CharacterClassExtension on CharacterClass {
     }
   }
 
-  String get traitNeedLabel {
+  String get classNeedLabel {
     switch (this) {
       case CharacterClass.scholar: return 'Study';
       case CharacterClass.warrior: return 'Train';

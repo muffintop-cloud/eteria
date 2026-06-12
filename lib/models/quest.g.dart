@@ -25,13 +25,13 @@ class QuestAdapter extends TypeAdapter<Quest> {
       objectives: (fields[5] as List?)?.cast<String>(),
       objectivesDone: (fields[6] as List?)?.cast<bool>(),
       skillIndices: (fields[7] as List?)?.cast<int>(),
-    );
+    )..unusedRewardType = fields[8] as int;
   }
 
   @override
   void write(BinaryWriter writer, Quest obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -47,7 +47,9 @@ class QuestAdapter extends TypeAdapter<Quest> {
       ..writeByte(6)
       ..write(obj.objectivesDone)
       ..writeByte(7)
-      ..write(obj.skillIndices);
+      ..write(obj.skillIndices)
+      ..writeByte(8)
+      ..write(obj.unusedRewardType);
   }
 
   @override

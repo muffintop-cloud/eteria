@@ -1,6 +1,6 @@
 enum Skill {wisdom, vitality, artistry, charisma}
 // enum values have indexes based on order --> e.g. wisdom = 0, vitality = 1, artistry = 2, charisma = 3
-// this is then called in NeedsService to check if a quest's skill matches the character's trait need (skillIndices)
+// this is then called in NeedsService to check if a quest's skill matches the character's class need (skillIndices)
 
 extension SkillExtension on Skill {
   String get label {
