@@ -1,10 +1,11 @@
+import 'package:eteria/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/models/skill.dart';
 import 'package:eteria/styles/app_styles.dart';
 
 class SkillBar extends StatelessWidget {
   final Skill skill;
-  final int level; 
+  final int level;
   final int currentXp;
   final int xpThreshold;
 
@@ -21,22 +22,23 @@ class SkillBar extends StatelessWidget {
     final color = AppStyles.skillColor(skill);
 
     final double progress;
-    if(xpThreshold == 0) { progress = 0.0; }
+    if (xpThreshold == 0) { progress = 0.0; } 
     else { progress = currentXp / xpThreshold; }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
+          // skill icon box
           Container(
-            width: 32,
-            height: 32,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: color.withValues(alpha:0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+              border: Border.all(color: AppColors.mainBrown, width: 1),
             ),
-            child: 
-              Icon(AppStyles.skillIcon(skill), color: color, size: 18),
+            child: Icon(AppStyles.skillIcon(skill), color: color, size: 20),
           ),
           const SizedBox(width: 10),
 
@@ -48,23 +50,31 @@ class SkillBar extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(skill.label,
-                      style: AppStyles.skillName),
-                    Text('Lv $level', style: AppStyles.skillLevel.copyWith(color: color)),
+                    Text(skill.label, style: AppStyles.label),
+                    Text(
+                      'Lv $level',
+                      style: AppStyles.label,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppStyles.smallRadius),
-                  child: LinearProgressIndicator(
-                    value: progress.clamp(0.0, 1.0),
-                    minHeight: 6,
-                    backgroundColor: color.withValues(alpha: 0.15),
-                    valueColor: AlwaysStoppedAnimation<Color>(color),
+
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+                    border: Border.all(color: AppColors.mainBrown, width: 1),
+                  ),
+
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+                    child: LinearProgressIndicator(
+                      value: progress.clamp(0.0, 1.0),
+                      minHeight: 9,
+                      backgroundColor: color.withValues(alpha: 0.15),
+                      valueColor: AlwaysStoppedAnimation<Color>(color),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text('$currentXp / $xpThreshold XP', style: AppStyles.labelSmall)
               ],
             ),
           ),

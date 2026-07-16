@@ -1,6 +1,7 @@
 import 'package:eteria/models/quest.dart';
 import 'package:eteria/models/skill.dart';
 import 'package:eteria/services/quest_service.dart';
+import 'package:eteria/styles/app_colors.dart';
 import 'package:eteria/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +67,19 @@ class _AddQuestDialogState extends State<AddQuestDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('New Quest'),
+      backgroundColor: AppColors.background,
+      shape:RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(AppStyles.mediumRadius),
+        side: const BorderSide(
+          color: AppColors.mainBrown,
+          width: 1.5,
+        ),
+      ),
+      title: Text(
+        'NEW QUEST',
+        style: AppStyles.titleLarge, 
+        textAlign: TextAlign.center,
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -79,27 +92,27 @@ class _AddQuestDialogState extends State<AddQuestDialog> {
               decoration: const InputDecoration(hintText: 'Enter quest title'),
             ),
             const SizedBox(height: 20),
-
+    
             // category
-            _buildSectionLabel('Category'),
+            _buildSectionLabel('CATEGORY'),
             const SizedBox(height: 6),
             _buildCategoryRow(),
             const SizedBox(height: 4),
             Text(
               _category.description,
-              style: AppStyles.labelSmall),
+              style: AppStyles.bodyText),
             const SizedBox(height: 16),
-
+    
             // objectives
             if (_category == QuestCategory.main) ...[
-              _buildSectionLabel('Objectives'),
+              _buildSectionLabel('OBJECTIVES'),
               const SizedBox(height: 6),
               _buildObjectivesList(),
               const SizedBox(height: 16),
             ],
             
             // difficulty
-            _buildSectionLabel('Difficulty'),
+            _buildSectionLabel('DIFFICULTY'),
             const SizedBox(height: 6),
             _buildDifficultyRow(),
             const SizedBox(height: 4),
@@ -110,19 +123,19 @@ class _AddQuestDialogState extends State<AddQuestDialog> {
               ),
             ),
             const SizedBox(height: 16),
-
+    
             // skills
-            _buildSectionLabel('Skills rewarded'),
+            _buildSectionLabel('SKILLS'),
             const SizedBox(height: 4),
             const Text('Which skills gain XP on completion?',
             style: AppStyles.description),
             const SizedBox(height: 8),
             _buildSkillsRow(),
-
+    
             // deadline
             if (_category != QuestCategory.daily) ...[
               const SizedBox(height: 16),
-              _buildSectionLabel('Deadline'),
+              _buildSectionLabel('DEADLINE'),
               const SizedBox(height: 6),
               _buildDeadlineRow(context),
             ],
@@ -132,13 +145,42 @@ class _AddQuestDialogState extends State<AddQuestDialog> {
       
       actions: [
         TextButton(
-          onPressed: () { Navigator.of(context).pop(); }, // close without saving
-          child: const Text('Cancel'),
-        ),
+            onPressed: () { Navigator.of(context).pop(); }, // close without saving
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.mainBrown,
+              minimumSize: const Size(90, 44),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+                side: const BorderSide(
+                  color: AppColors.mainBrown,
+                  width: 1,
+                ),
+              ),
+            ),
+            child: const Text(
+              'Cancel',
+              style: AppStyles.label
+            ),
+          ),
         
         ElevatedButton(
           onPressed: _submit, 
-          child: const Text('Add'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.green,
+            foregroundColor: AppColors.panel,
+            minimumSize: const Size(90, 44),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.circular(AppStyles.mediumRadius),
+              side: const BorderSide(
+                color: AppColors.mainBrown,
+                width: 1,
+              ),
+            ),
+          ),
+          child: Text(
+            'Add',
+            style: AppStyles.label
+          ),
         ),
       ],
     );
@@ -149,7 +191,7 @@ class _AddQuestDialogState extends State<AddQuestDialog> {
   Widget _buildSectionLabel(String text) {
     return Text(
       text,
-      style: const TextStyle(fontWeight: FontWeight.bold),
+      style: AppStyles.titleSmall,
     );
   }
 
@@ -271,11 +313,10 @@ class _AddQuestDialogState extends State<AddQuestDialog> {
             _deadline == null
               ? 'No deadline'
               : '${_deadline!.day}/${_deadline!.month}/${_deadline!.year}',
-            style: TextStyle(
-              color: _deadline == null ? Colors.grey : Colors.blue,
+            style: AppStyles.bodyText.copyWith(color: _deadline == null ? AppColors.lightBrown : AppColors.mainBrown,)
             ),
           ),
-        ),
+        
 
         TextButton(
           onPressed: () async {
@@ -291,12 +332,15 @@ class _AddQuestDialogState extends State<AddQuestDialog> {
               });
             }
           },
-          child: const Text('Pick date'),
+          child: const Text(
+            'Pick date',
+            style: AppStyles.label
+          ),
         ),
 
         if (_deadline != null)
           IconButton(
-            icon: const Icon(Icons.clear, size: 18),
+            icon: const Icon(Icons.clear, size: 18, color: AppColors.mainBrown),
             onPressed: () {
               setState(() {
                 _deadline = null;
@@ -333,16 +377,16 @@ class _CategoryButton extends StatelessWidget {
           onTap: onTap,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? color: Colors.transparent,
-              border: Border.all(color: color),
+              color: isSelected ? color : AppColors.background,
+              border: Border.all(color: AppColors.mainBrown, width: 1),
               borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
             ),
             child: Text(
               category.label,
-              style: AppStyles.titleSmall.copyWith(color: isSelected ? Colors.white : color,),
+              style: AppStyles.label.copyWith(color: isSelected ? AppColors.background : color,),
             ),
           ),
         ),
@@ -374,16 +418,16 @@ class _DifficultyButton extends StatelessWidget {
           onTap: onTap,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? color: Colors.transparent,
-              border: Border.all(color: color),
+              color: isSelected ? color: AppColors.background,
+              border: Border.all(color: AppColors.mainBrown),
               borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
             ),
             child: Text(
               difficulty.label,
-              style: AppStyles.titleSmall.copyWith(color: isSelected ? Colors.white : color,),
+              style: AppStyles.label.copyWith(color: isSelected ? AppColors.background : color,),
             ),
           ),
         ),
@@ -416,9 +460,9 @@ class _SkillOption extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
             ? color.withValues(alpha: 0.15)
-            : Colors.transparent,
+            : AppColors.background,
           border: Border.all(
-            color: isSelected ? color : Colors.grey,
+            color: AppColors.lightBrown,
             width: isSelected ? 1.5 : 0.8,
           ),
           borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
@@ -428,16 +472,13 @@ class _SkillOption extends StatelessWidget {
           children: [
             Icon(
               AppStyles.skillIcon(skill),
-              color: isSelected ? color : Colors.grey,
-              size: 15,
+              color: isSelected ? color : AppColors.lightBrown,
+              size: 16,
             ),
             const SizedBox(width: 5),
             Text(
               skill.label,
-              style: AppStyles.skillName.copyWith(
-                fontSize: 12,
-                color: isSelected ? color : Colors.grey,
-              ),
+              style: AppStyles.label.copyWith(color: isSelected ? color : AppColors.lightBrown),
             ),
           ],
         ),

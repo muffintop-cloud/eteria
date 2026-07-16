@@ -1,3 +1,4 @@
+import 'package:eteria/styles/app_colors.dart';
 import 'package:eteria/styles/appearance_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/models/character.dart';
@@ -29,9 +30,8 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Future<void> onPurchase(ShopItem item) async {
     String result = await ShopService.purchase(item);
-    setState(() {
-      showPurchaseConfirmation(result);
-    });
+    setState(() {});
+    showPurchaseConfirmation(result);
   }
 
   @override
@@ -48,55 +48,54 @@ class _ShopScreenState extends State<ShopScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 22),
-              color: Colors.grey.shade100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('The Market', style: AppStyles.titleLarge),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Trade coins for new styles.',
-                    style: AppStyles.description,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            // item grid
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(AppStyles.mediumPadding),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 0.72,
-                ),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  ShopItem item = items[index];
-                  bool isOwned = character.hasUnlocked(item.id);
-                  bool canAfford = character.coins >= item.price;
-
-                  return _ShopTile(
-                    item: item,
-                    isOwned: isOwned,
-                    canAfford: canAfford,
-                    onBuy: () {
-                      onPurchase(item);
-                    },
-                  );
-                },
-              ),
-            ),
+            buildHeader(context),
+            buildItemGrid(context, character, items),
           ],
         );
       },
+    );
+  }
+
+  // BUILD METHODS
+  Widget buildHeader(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      color: AppColors.background,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [Text('THE MARKET', style: AppStyles.titleLarge)],
+      ),
+    );
+  }
+
+  Widget buildItemGrid(BuildContext context, Character character, List<ShopItem> items) {
+    // item grid
+    return Expanded(
+      child: GridView.builder(
+        padding: const EdgeInsets.all(AppStyles.mediumPadding),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          mainAxisExtent: 280, // sets a fixed pixel height for every tile
+        ),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          ShopItem item = items[index];
+          bool isOwned = character.hasUnlocked(item.id);
+          bool canAfford = character.coins >= item.price;
+
+          return _ShopTile(
+            item: item,
+            isOwned: isOwned,
+            canAfford: canAfford,
+            onBuy: () {
+              onPurchase(item);
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -107,8 +106,6 @@ class _ShopTile extends StatelessWidget {
   final bool canAfford;
   final VoidCallback onBuy;
 
-  static const Color _coinColor = AppStyles.coinColor;
-
   const _ShopTile({
     required this.item,
     required this.isOwned,
@@ -118,13 +115,18 @@ class _ShopTile extends StatelessWidget {
 
   Widget _itemPreview() {
     if (item.cosmeticCategory == null) {
-      return Icon(item.icon,
-        color: isOwned ? Colors.green : _coinColor, size: 26);
+      return Icon(
+        item.icon,
+        color: isOwned ? AppColors.green : AppColors.gold,
+        size: 26,
+      );
     } // if no cosmetic category is set, asset cant be loaded --> show icon
 
-    String assetPath =
-      AppearanceStyles.assetPath(item.cosmeticCategory!, item.id.trim());
-    
+    String assetPath = AppearanceStyles.assetPath(
+      item.cosmeticCategory!,
+      item.id.trim(),
+    );
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.asset(
@@ -133,128 +135,141 @@ class _ShopTile extends StatelessWidget {
         alignment: Alignment.center,
         errorBuilder: (context, error, stackTrace) => Icon(
           item.icon,
-          color: isOwned ? Colors.green : _coinColor,
+          color: isOwned ? AppColors.green : AppColors.gold,
           size: 26,
         ),
       ),
     );
-  } 
-
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: isOwned
-            ? Colors.green.withValues(alpha: 0.08)
-            : Colors.grey.shade100,
-        border: Border.all(
-          color: isOwned
-              ? Colors.green.withValues(alpha: 0.5)
-              : Colors.grey.shade300,
-        ),
-        borderRadius: BorderRadius.circular(12),
+            ? AppColors.green
+            : AppColors.panel,
+        border: Border.all(color: AppColors.mainBrown),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: AppStyles.panelShadow,
       ),
 
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // item image preview
           Container(
             width: double.infinity,
-            height: 72,
+            height: 130,
             margin: const EdgeInsets.fromLTRB(6, 6, 6, 0),
             decoration: BoxDecoration(
               color: isOwned
-                  ? Colors.green.withValues(alpha: 0.1)
-                  : _coinColor.withValues(alpha: 0.07),
+                  ? AppColors.panel
+                  : AppColors.background,
               borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.mainBrown, width: 1),
             ),
             child: _itemPreview(),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 2),
 
           // item name
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: Text(
               item.name,
-              style: AppStyles.badgeText,
+              style: AppStyles.titleSmall,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
 
-          // isOwned
-          if (isOwned) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Text(
-                'Owned',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ] else ...[
-            // price
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.monetization_on_outlined,
-                  size: 12,
-                  color: _coinColor,
-                ),
-                const SizedBox(width: 3),
-                Text(
-                  '${item.price}',
-                  style: AppStyles.labelSmall.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: _coinColor,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-
-            // buy button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: canAfford ? onBuy : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: canAfford
-                        ? _coinColor
-                        : Colors.grey.shade300,
-                    foregroundColor: canAfford ? Colors.white : Colors.grey,
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(6),
-                    ),
-                  ),
-                  child: const Text(
-                    'Buy',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          // owned/buy
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            child: isOwned ? _owned() : _buy(),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _owned() {
+    return SizedBox(
+      width: double.infinity,
+      height: 44,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.mainBrown,
+          borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+          border: Border.all(color: AppColors.mainBrown),
+        ),
+        alignment: Alignment.center,
+        child: const Text(
+          'OWNED',
+          style: TextStyle(
+            fontSize: 20,
+            color: AppColors.panel,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buy() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // price
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.monetization_on_outlined,
+              size: 20,
+              color: AppColors.gold,
+            ),
+            const SizedBox(width: 3),
+            Text('${item.price}', style: AppStyles.titleSmall),
+          ],
+        ),
+
+        const SizedBox(height: 4),
+
+        // buy button
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: canAfford ? AppStyles.panelShadow : null,
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            height: 44,
+            child: ElevatedButton(
+              onPressed: canAfford ? onBuy : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: canAfford
+                    ? AppColors.orange
+                    : Colors.grey.shade300,
+                foregroundColor: canAfford ? Colors.white : Colors.grey,
+                side: const BorderSide(color: AppColors.mainBrown),
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+                ),
+              ),
+              child: const Text(
+                'BUY',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

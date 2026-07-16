@@ -1,4 +1,5 @@
 import 'package:eteria/services/character_service.dart';
+import 'package:eteria/styles/app_colors.dart';
 import 'package:eteria/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class StatsBar extends StatelessWidget {
 
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: AppStyles.panelDecoration(),
+          decoration: AppStyles.statsBarDecoration(),
           child: Row(
             children: [
               Container(
@@ -30,7 +31,7 @@ class StatsBar extends StatelessWidget {
                 height: 36,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.indigo,
+                  color: AppColors.blue,
                 ),
                 alignment: Alignment.center,
                 child: Text('${character.level}', style: AppStyles.statNumber),
@@ -51,9 +52,9 @@ class StatsBar extends StatelessWidget {
                       child: LinearProgressIndicator(
                         value: xpProgress,
                         minHeight: 8,
-                        backgroundColor: Colors.grey.shade300,
+                        backgroundColor: AppColors.blue.withValues(alpha: 0.35),
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.indigo,
+                          AppColors.blue,
                         ),
                       ),
                     ),
@@ -61,7 +62,7 @@ class StatsBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              Container(width: 1, height: 32, color: Colors.grey.shade300),
+              Container(width: 1, height: 32, color: AppColors.panel),
               const SizedBox(width: 12),
               Row(
                 mainAxisSize:
@@ -69,7 +70,7 @@ class StatsBar extends StatelessWidget {
                 children: [
                   const Icon(
                     Icons.monetization_on_outlined,
-                    color: AppStyles.coinColor,
+                    color: AppColors.gold,
                     size: 20,
                   ),
                   const SizedBox(width: 4),
@@ -78,11 +79,7 @@ class StatsBar extends StatelessWidget {
                     children: [
                       Text(
                         '${character.coins}',
-                        style: AppStyles.statNumber,
-                      ),
-                      const Text(
-                        'Coins',
-                        style: AppStyles.labelSmall,
+                        style: AppStyles.xpLabel,
                       ),
                     ],
                   ),

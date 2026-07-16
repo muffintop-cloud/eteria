@@ -1,3 +1,4 @@
+import 'package:eteria/styles/app_colors.dart';
 import 'package:eteria/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/models/character.dart';
@@ -22,37 +23,53 @@ class NeedMeter extends StatelessWidget {
 
   NeedState _needState() {
     switch (rawValue) {
-      case 0: return NeedState.depleted;
-      case <= 19: return NeedState.critical;
-      case <= 49: return NeedState.low;
-      default: return NeedState.stable;
+      case 0:
+        return NeedState.depleted;
+      case <= 19:
+        return NeedState.critical;
+      case <= 49:
+        return NeedState.low;
+      default:
+        return NeedState.stable;
     }
   } // converts rawValue into NeedState enum
 
   int _hpPenalty() {
     switch (_needState()) {
-      case NeedState.stable: return 0;
-      case NeedState.low: return 5;
-      case NeedState.critical: return 15;
-      case NeedState.depleted: return 30;
+      case NeedState.stable:
+        return 0;
+      case NeedState.low:
+        return 5;
+      case NeedState.critical:
+        return 15;
+      case NeedState.depleted:
+        return 30;
     }
   } // returns hp penalty for a need's current state
 
   String _stateLabel() {
     switch (_needState()) {
-      case NeedState.stable: return 'Stable';
-      case NeedState.low: return 'Low';
-      case NeedState.critical: return 'Critical';
-      case NeedState.depleted: return 'Depleted';
+      case NeedState.stable:
+        return 'Stable';
+      case NeedState.low:
+        return 'Low';
+      case NeedState.critical:
+        return 'Critical';
+      case NeedState.depleted:
+        return 'Depleted';
     }
   } // human readable state names
 
   Color _stateColor() {
     switch (_needState()) {
-      case NeedState.stable: return Colors.green;
-      case NeedState.low: return Colors.orange;
-      case NeedState.critical: return Colors.deepOrange;
-      case NeedState.depleted: return Colors.red;
+      case NeedState.stable:
+        return AppColors.green;
+      case NeedState.low:
+        return AppColors.gold;
+      case NeedState.critical:
+        return AppColors.orange;
+      case NeedState.depleted:
+        return AppColors.red;
     }
   } // state label colors
 
@@ -64,30 +81,25 @@ class NeedMeter extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(16)),
+        backgroundColor: AppColors.background,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppStyles.mediumRadius)),
         contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
         title: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: AppStyles.panelDecoration(),
               child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(width: 12),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppStyles.titleSmall,
             ),
           ],
         ),
         content: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: AppStyles.mediumPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,30 +119,27 @@ class NeedMeter extends StatelessWidget {
               _InfoRow(
                 leadingLabel: 'Daily HP penalty: ',
                 valueText: penalty == 0 ? 'None' : '-$penalty HP',
-                valueColor: penalty == 0 ? Colors.green : Colors.red,
+                valueColor: penalty == 0 ? AppColors.green : AppColors.red,
               ),
-              
+
               const SizedBox(height: 16),
 
               // state descriptions
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(AppStyles.smallPadding),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
                 ),
-                child: Text(
-                  _stateDescription(),
-                  style: AppStyles.description,
-                ),
+                child: Text(_stateDescription(), style: AppStyles.description),
               ),
             ],
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(), 
-            child: const Text('Ok')
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Ok'),
           ),
         ],
       ),
@@ -139,57 +148,75 @@ class NeedMeter extends StatelessWidget {
 
   String _stateDescription() {
     switch (_needState()) {
-      case NeedState.stable: 
+      case NeedState.stable:
         return 'This need is well-maintained.';
       case NeedState.low:
         return 'This need is getting low. If it stays here until the daily reset, you\'ll lose 5 HP.';
-      case NeedState.critical: 
+      case NeedState.critical:
         return 'This need is critically low. You\'ll lose 15 HP at the daily reset unless you restore it.';
       case NeedState.depleted:
         return 'This need is depleted. If it stays here, you\'ll lose 30 HP at the daily reset.';
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-    onTap: () => _showInfoDialog(context),
-    child: Column(
+      onTap: () => _showInfoDialog(context),
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            width: size,
-            height: size,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: size,
-                  height: size,
-                  child: CircularProgressIndicator(
-                    value: value.clamp(0.0, 1.0),
-                    strokeWidth: 6,
-                    color: color,
-                    backgroundColor: color.withValues(alpha: 0.15),
-                  ),
+          
+          Container(
+            width: size + 9,
+            height: size + 9,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.mainBrown, width: 1), // outer border
+            ),
+            
+            child: Center(
+              child: SizedBox(
+                width: size,
+                height: size,
+                
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // inner border
+                    Container(
+                      width: size - 7,
+                      height: size - 7,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.mainBrown, width: 1),
+                      ),
+                    ),
+                    
+                    // progress bar
+                    SizedBox(
+                      width: size,
+                      height: size,
+                      child: CircularProgressIndicator(
+                        value: value.clamp(0.0, 1.0),
+                        strokeWidth: 7,
+                        color: color,
+                        backgroundColor: color.withValues(alpha: 0.15),
+                      ),
+                    ),
+
+                    Icon(icon, color: color, size: size * 0.36),
+                  ],
                 ),
-                Icon(
-                  icon,
-                  color: color,
-                  size: size*0.36,
-                ),
-              ],
+              ),
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            label,
-            style: AppStyles.needLabel.copyWith(color: color) // apply needLabel style but change the color to a need's color
-          ),
+          Text(label, style: AppStyles.label), // apply needLabel style but change the color to a need's color
         ],
       ),
     );
-  } 
+  }
 }
 
 class _InfoRow extends StatelessWidget {
@@ -208,14 +235,8 @@ class _InfoRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          leadingLabel,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-        Text(
-          valueText,
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: valueColor),
-        ),
+        Text(leadingLabel, style: AppStyles.bodyText),
+        Text(valueText, style: AppStyles.label.copyWith(color: valueColor)),
       ],
     );
   }

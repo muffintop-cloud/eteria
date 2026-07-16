@@ -22,7 +22,7 @@ extension CharacterClassExtension on CharacterClass {
   String get dailyRequirement {
     switch (this) {
       case CharacterClass.scholar: return 'Learning or studying';
-      case CharacterClass.warrior: return 'Physical activity or training';
+      case CharacterClass.warrior: return 'Physical activity';
       case CharacterClass.artisan: return 'Creative activity';
       case CharacterClass.bard: return 'Social interaction or performance';
     }

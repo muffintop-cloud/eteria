@@ -1,3 +1,4 @@
+import 'package:eteria/styles/app_colors.dart';
 import 'package:eteria/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class HpBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.favorite, color: AppStyles.hpColor, size: 13),
+            const Icon(Icons.favorite, color: AppColors.red, size: 16),
             const SizedBox(width: 4),
             Text(
               '$current/$max',
@@ -29,13 +30,21 @@ class HpBar extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: LinearProgressIndicator(
-            value: value.clamp(0.0, 1.0),
-            minHeight: 6,
-            backgroundColor: const Color.fromARGB(255, 255, 136, 156),
-            valueColor: const AlwaysStoppedAnimation(AppStyles.hpColor),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+            border: Border.all(
+              color: AppColors.mainBrown, width: 1
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+            child: LinearProgressIndicator(
+              value: value.clamp(0.0, 1.0),
+              minHeight: 6,
+              backgroundColor: AppColors.red.withValues(alpha: 0.35),
+              valueColor: const AlwaysStoppedAnimation(AppColors.red),
+            ),
           ),
         ),
       ],

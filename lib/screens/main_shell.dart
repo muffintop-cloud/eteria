@@ -1,5 +1,6 @@
 import 'package:eteria/screens/title_screen.dart';
 import 'package:eteria/services/character_service.dart';
+import 'package:eteria/styles/app_colors.dart' show AppColors;
 import 'package:eteria/widgets/stats_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/screens/home_screen.dart';
@@ -53,6 +54,7 @@ class _MainShellState extends State<MainShell> {
           ),
         ],
       ),
+      
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
@@ -61,14 +63,18 @@ class _MainShellState extends State<MainShell> {
           });
         },
         type: BottomNavigationBarType.fixed,
+
+        backgroundColor: AppColors.mainBrown,
+        selectedItemColor: AppColors.green,
+        unselectedItemColor: AppColors.panel,
+
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Quests',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.storefront), label: 'Shop'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Character'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.storefront), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
         ],
       ),
     );

@@ -25,7 +25,7 @@ class XpRewardBadge extends StatelessWidget {
             Icon(icon, size: 10, color: color),
             const SizedBox(width: 3),
           ],
-          Text(label, style: AppStyles.badgeText.copyWith(color: color)),
+          Text(label, style: AppStyles.badgeText),
         ],
       ),
     );

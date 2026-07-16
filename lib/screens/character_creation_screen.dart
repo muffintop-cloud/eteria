@@ -1,3 +1,4 @@
+import 'package:eteria/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/services/character_service.dart';
 import 'package:eteria/styles/app_styles.dart';
@@ -126,19 +127,20 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             buildTopBar(context),
             buildNameField(context),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
 
             Expanded(child: characterDisplay(context)),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
 
             buildTabRow(context), // tabs above options panel
             buildOptionsPanel(context), // grid of selectable tiles
+            const SizedBox(height: 16),
             buildActionButton(context), // next/save button
           ],
         ),
@@ -162,7 +164,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
               child: Icon(
                 Icons.arrow_back_ios_new,
                 size: 18,
-                color: Colors.black,
+                color: AppColors.darkBrown,
               ),
             ),
             const SizedBox(width: 12),
@@ -170,13 +172,19 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
 
           // progress bar
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppStyles.smallRadius),
-              child: LinearProgressIndicator(
-                value: widget.editMode ? 1.0 : 0.5,
-                minHeight: 4,
-                backgroundColor: Colors.grey.shade200,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.grey.shade700),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.mainBrown, width: 1),
+                borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+                child: LinearProgressIndicator(
+                  value: widget.editMode ? 1.0 : 0.5,
+                  minHeight: 4,
+                  backgroundColor: AppColors.gold.withValues(alpha: 0.2),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.gold),
+                ),
               ),
             ),
           ),
@@ -185,10 +193,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
 
           Text(
             widget.editMode ? 'Edit appearance' : 'Appearance',
-            style: AppStyles.labelSmall.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
-            ),
+            style: AppStyles.label,
           ),
         ],
       ),
@@ -202,18 +207,15 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
       child: TextField(
         controller: _nameController,
         textAlign: TextAlign.center,
-        style: AppStyles.bodyText.copyWith(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        style: AppStyles.label,
         decoration: InputDecoration(
           hintText: 'Character name',
-          hintStyle: AppStyles.labelSmall.copyWith(fontSize: 15),
+          hintStyle: AppStyles.bodyText,
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade200),
+            borderSide: BorderSide(color: AppColors.lightBrown),
           ),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400, width: 2),
+            borderSide: BorderSide(color: AppColors.mainBrown, width: 2),
           ),
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 6),
@@ -234,13 +236,14 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade300),
+          color: AppColors.background,
+          borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+          border: Border.all(color: AppColors.mainBrown, width: 1.5),
+          boxShadow: AppStyles.panelShadow,
         ),
         child: ClipRRect(
           // clips the Stack to the rounded corners so png images dont bleed outside the container
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
           child: Stack(
             alignment: Alignment.center,
             fit: StackFit
@@ -251,7 +254,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return const Center(
-                    child: Icon(Icons.person, size: 110, color: Colors.black12),
+                    child: Icon(Icons.person, size: 110, color: AppColors.mainBrown),
                   );
                 },
               ),
@@ -288,7 +291,6 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
 
   Widget buildTabRow(BuildContext context) {
     // tab row: body | hair | eyes | outfits
-    const Color accent = Colors.black;
     List<Widget> tabWidgets = []; // list of tab widgets built using a for loop
 
     for (int i = 0; i < AppearanceStyles.tabs.length; i++) {
@@ -297,7 +299,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
 
       double rightMargin; // all tabs except the last one have a small right margin to create a visible gap between them
       if (i < AppearanceStyles.tabs.length - 1) {
-        rightMargin = 3.0;
+        rightMargin = 4.0;
       } else {
         rightMargin = 0.0;
       }
@@ -317,7 +319,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
             margin: EdgeInsets.only(right: rightMargin),
             decoration: AppearanceStyles.tabDecoration(
               active: active,
-              accent: accent,
+              accent: AppColors.mainBrown,
               context: context,
             ),
             child: Column(
@@ -325,17 +327,8 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
               children: [
                 Icon(
                   tab.icon,
-                  size: 13,
-                  color: active ? accent : Colors.grey,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  tab.label,
-                  style: AppearanceStyles.tabLabelStyle(
-                    active: active,
-                    accent: accent,
-                    context: context,
-                  ),
+                  size: 24,
+                  color: active ? AppColors.darkBrown : AppColors.darkBrown,
                 ),
               ],
             ),
@@ -346,71 +339,74 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 28),
       child: Row(children: tabWidgets),
     );
   }
 
   // scrollable options panel
   Widget buildOptionsPanel(BuildContext context) {
-    const Color accent = Colors.black;
+    const Color accent = AppColors.darkBrown;
     String activeCategory = getActiveCategory();
     List<String> options = getActiveOptions();
     String selected = _selections[activeCategory] ?? '';
 
-    return Container(
-      height: AppearanceStyles.panelHeight,
-      width: double.infinity,
-      decoration: AppearanceStyles.panelDecoration(context),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-      child: GridView.builder(
-        scrollDirection: Axis.horizontal,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: AppearanceStyles.tileSpacing,
-          crossAxisSpacing: AppearanceStyles.tileSpacing,
-          childAspectRatio: 1.0,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        height: 160,
+        width: double.infinity,
+        decoration: AppearanceStyles.optionsPanel(context),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        child: GridView.builder(
+          scrollDirection: Axis.horizontal,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            mainAxisSpacing: AppearanceStyles.tileSpacing,
+            crossAxisSpacing: AppearanceStyles.tileSpacing,
+            childAspectRatio: 1.5,
+          ),
+          itemCount: options.length,
+          itemBuilder: (context, index) {
+            String option = options[index];
+            bool isSelected = (selected == option);
+      
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selections[activeCategory] = option;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                decoration: AppearanceStyles.tileDecoration(
+                  selected: isSelected,
+                  accent: accent,
+                  context: context,
+                ),
+      
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    AppearanceStyles.tileRadius,
+                  ),
+                  child: Image.asset(
+                    AppearanceStyles.assetPath(activeCategory, option),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Icon(
+                          AppearanceStyles.placeholderIcon(activeCategory),
+                          size: 28,
+                          color: isSelected ? accent : Colors.grey,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
         ),
-        itemCount: options.length,
-        itemBuilder: (context, index) {
-          String option = options[index];
-          bool isSelected = (selected == option);
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selections[activeCategory] = option;
-              });
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 180),
-              decoration: AppearanceStyles.tabDecoration(
-                active: isSelected,
-                accent: accent,
-                context: context,
-              ),
-
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  AppearanceStyles.tileRadius,
-                ),
-                child: Image.asset(
-                  AppearanceStyles.assetPath(activeCategory, option),
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Center(
-                      child: Icon(
-                        AppearanceStyles.placeholderIcon(activeCategory),
-                        size: 28,
-                        color: isSelected ? accent : Colors.grey,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          );
-        },
       ),
     );
   }
@@ -420,10 +416,20 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
       child: SizedBox(
+        height: 45,
         width: double.infinity,
         child: ElevatedButton(
           onPressed: onActionButton,
-          child: Text(widget.editMode ? 'Save changes' : 'Next'),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+              side: BorderSide(color: AppColors.mainBrown, width: 1.5),
+            ),
+          ),
+          child: Text(
+            widget.editMode ? 'Save changes' : 'Next',
+            style: AppStyles.titleSmall,
+          ),
         ),
       ),
     );

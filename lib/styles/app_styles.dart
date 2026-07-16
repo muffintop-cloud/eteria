@@ -2,13 +2,15 @@ import 'package:eteria/models/character_class.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/models/quest.dart';
 import 'package:eteria/models/skill.dart';
+import 'package:eteria/styles/app_colors.dart';
 
 class AppStyles {
   AppStyles._();
+  static const String fontFamily = 'Afacad';
 
   // padding
-  static const double smallPadding = 6;
-  static const double mediumPadding = 12;
+  static const double smallPadding = 8;
+  static const double mediumPadding = 16;
   static const double largePadding = 20;
 
   // radius
@@ -18,106 +20,105 @@ class AppStyles {
 
   // text styles 
   static const TextStyle titleLarge = TextStyle( 
-    fontSize: 20, 
+    fontFamily: 'Afacad',
+    fontSize: 32, 
     fontWeight: FontWeight.bold, 
-    color: Color.fromARGB(255, 30, 30, 30)
+    color: AppColors.mainBrown,
   ); // character name, screen headings
 
   static const TextStyle titleMedium = TextStyle(
-    fontSize: 14, 
+    fontFamily: 'Afacad',
+    fontSize: 24, 
     fontWeight: FontWeight.bold, 
     letterSpacing: 0.5,
-    color: Color.fromARGB(255, 30, 30, 30)
+    color: AppColors.mainBrown
   ); // section titles
   
   static const TextStyle titleSmall = TextStyle(
-    fontSize: 12, 
+    fontFamily: 'Afacad',
+    fontSize: 18, 
     fontWeight: FontWeight.bold, 
-    color: Color.fromARGB(255, 30, 30, 30)
+    color: AppColors.mainBrown
   ); // panel headers
 
   static const TextStyle bodyText = TextStyle(
-    fontSize: 13,
-    color: Color.fromARGB(255, 30, 30, 30)
-  );
-
-  static const TextStyle labelSmall = TextStyle(
-    fontSize: 10,
-    color: Color.fromARGB(255, 30, 30, 30)
+    fontFamily: 'Afacad',
+    fontSize: 16,
+    color: AppColors.mainBrown
   );
 
   static const TextStyle badgeText = TextStyle(
-    fontSize: 11,
-    fontWeight: FontWeight.bold,
-  );
-
-  static const TextStyle needLabel = TextStyle(
-    fontSize: 10,
-    fontWeight: FontWeight.w600
-  );
-
-  static const TextStyle skillName = TextStyle(
+    fontFamily: 'Afacad',
     fontSize: 13,
-    fontWeight: FontWeight.w600
+    fontWeight: FontWeight.bold,
+    color: AppColors.mainBrown,
   );
 
-  static const TextStyle skillLevel = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.bold
+  static const TextStyle label = TextStyle(
+    fontFamily: 'Afacad',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.mainBrown,
   );
 
   static const TextStyle statNumber = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.bold
+    fontFamily: 'Afacad',
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: AppColors.panel
   );
 
   static const TextStyle hpLabel = TextStyle(
-    fontSize: 11,
+    fontFamily: 'Afacad',
+    fontSize: 16,
     fontWeight: FontWeight.bold,
-    color: Color.fromARGB(255, 255, 35, 72)
+    color: AppColors.red,
   );
 
   static const TextStyle xpLabel = TextStyle(
-    fontSize: 10,
-    color: Colors.grey
+    fontFamily: 'Afacad',
+    fontSize: 16,
+    color: AppColors.panel,
   );
 
   static const TextStyle classLabel = TextStyle(
-    fontSize: 11,
+    fontFamily: 'Afacad',
+    fontSize: 16,
     fontWeight: FontWeight.bold,
-    color: Colors.white,
+    color: AppColors.panel,
   );
 
   static const TextStyle description = TextStyle(
-    fontSize: 11,
-    color: Color.fromARGB(255, 100, 100, 100)
+    fontFamily: 'Afacad',
+    fontSize: 16,
+    color: AppColors.lightBrown,
   );
 
   // difficulty
   static Color difficultyColor(Difficulty d) {
     switch(d) {
-      case Difficulty.low: return const Color.fromARGB(255, 100, 181, 102);
-      case Difficulty.medium: return const Color.fromARGB(255, 255, 159, 14);
-      case Difficulty.high: return const Color.fromARGB(255, 213, 7, 55);
+      case Difficulty.low: return AppColors.green;
+      case Difficulty.medium: return AppColors.gold;
+      case Difficulty.high: return AppColors.red;
     }
   }
 
   // category
   static Color categoryColor(QuestCategory c) {
     switch(c) {
-      case QuestCategory.daily: return const Color.fromARGB(255, 34, 69, 208);
-      case QuestCategory.side: return const Color.fromARGB(255, 160, 95, 172);
-      case QuestCategory.main: return const Color.fromARGB(255, 255, 164, 7);
+      case QuestCategory.daily: return AppColors.blue;
+      case QuestCategory.side: return AppColors.red;
+      case QuestCategory.main: return AppColors.gold;
     }
   }
 
   // skills
   static Color skillColor(Skill s) {
     switch(s) {
-      case Skill.wisdom: return const Color.fromARGB(255, 124, 77, 255);
-      case Skill.vitality: return const Color.fromARGB(255, 229, 68, 73);
-      case Skill.artistry: return const Color.fromARGB(255, 16, 184, 190);
-      case Skill.charisma: return const Color.fromARGB(255, 236, 189, 20);
+      case Skill.wisdom: return AppColors.blue;
+      case Skill.vitality: return AppColors.red;
+      case Skill.artistry: return AppColors.green;
+      case Skill.charisma: return AppColors.gold;
     }
   }
 
@@ -133,10 +134,10 @@ class AppStyles {
   // classes
   static Color classColor(CharacterClass c) {
     switch(c) {
-      case CharacterClass.scholar: return const Color.fromARGB(255, 117, 50, 242);
-      case CharacterClass.warrior: return const Color.fromARGB(255, 209, 24, 49);
-      case CharacterClass.artisan: return const Color.fromARGB(255, 51, 165, 207);
-      case CharacterClass.bard: return const Color.fromARGB(255, 255, 175, 37);
+      case CharacterClass.scholar: return AppColors.blue;
+      case CharacterClass.warrior: return AppColors.red;
+      case CharacterClass.artisan: return AppColors.green;
+      case CharacterClass.bard: return AppColors.gold;
     }
   }
 
@@ -149,15 +150,6 @@ class AppStyles {
     }
   }
 
-  // needs
-  static const Color hungerColor = Color.fromARGB(255, 255, 100, 100);
-  static const Color thirstColor = Color.fromARGB(255, 171, 209, 255);
-  static const Color classNeedColor = Color.fromARGB(255, 176, 255, 111);
-  static const Color hpColor = Color.fromARGB(255, 255, 35, 72);
-
-  // coins
-  static const Color coinColor = Color.fromARGB(255, 255, 196, 0);
-
   // deadline format
   static String deadlineFormat(DateTime d) {
     final now = DateTime.now();
@@ -168,25 +160,48 @@ class AppStyles {
     else { return '$diff day(s)'; }
   }
 
-  // container decorations
+  // panel dropdown shadow
+  static const List<BoxShadow> panelShadow = [
+    BoxShadow(
+      color: AppColors.lightBrown,
+      blurRadius: 4,
+      offset: Offset(0, 2),
+      spreadRadius: -1,
+    ),
+  ];
+
+  // panels
   static BoxDecoration panelDecoration() {
     return BoxDecoration(
-      color: const Color.fromARGB(255, 245, 245, 245),
-      borderRadius: BorderRadius.circular(largeRadius)
+      color: AppColors.panel,
+      borderRadius: BorderRadius.circular(mediumRadius),
+      border: Border.all(color: AppColors.mainBrown, width: 1),
+      boxShadow: panelShadow
     );
   } // skills/class info/daily quests
 
+  static BoxDecoration statsBarDecoration() {
+    return BoxDecoration(
+      color: AppColors.mainBrown,
+      border: Border.all(color: AppColors.darkBrown),
+      boxShadow: panelShadow,
+    );
+  }
+
   static BoxDecoration characterPanelDecoration(){
     return BoxDecoration(
-      color: const Color.fromARGB(255, 230, 230, 230),
-      borderRadius: BorderRadius.circular(largeRadius)
+      color: AppColors.panel,
+      borderRadius: BorderRadius.circular(mediumRadius),
+      border: Border.all(color: AppColors.mainBrown, width: 1),
+      boxShadow: panelShadow,
     );
   }
 
   static BoxDecoration badgeDecoration(Color color) {
     return BoxDecoration(
-      border: Border.all(color: color, width: 0.8),
-      borderRadius: BorderRadius.circular(smallRadius),
+      color: color,
+      border: Border.all(color: AppColors.mainBrown, width: 0.8),
+      borderRadius: BorderRadius.circular(smallRadius)
     ); // xp reward badge in a quest tile
   }
 }

@@ -1,3 +1,4 @@
+import 'package:eteria/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/models/character.dart';
 import 'package:eteria/models/character_class.dart';
@@ -80,197 +81,203 @@ class _ClassSelectionScreenState extends State<ClassSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            // top bar
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      size: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppStyles.smallRadius,
-                      ),
-                      child: LinearProgressIndicator(
-                        value: widget.editMode ? 1.0 : 1.0,
-                        minHeight: 4,
-                        backgroundColor: Colors.grey.shade200,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.grey.shade700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    widget.editMode ? 'Change class' : 'Choose class',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
+            buildTopBar(context),
+            buildClassList(context),
+            buildConfirmButton(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // build methods
+
+  // top bar
+  Widget buildTopBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(
+              Icons.arrow_back_ios_new,
+              size: 18,
+              color: AppColors.darkBrown,
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.mainBrown, width: 1),
+                borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppStyles.smallRadius),
+                child: LinearProgressIndicator(
+                  value: widget.editMode ? 1.0 : 1.0,
+                  minHeight: 4,
+                  backgroundColor: AppColors.gold.withValues(alpha: 0.15),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.gold),
+                ),
               ),
             ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            widget.editMode ? 'Change class' : 'Choose class',
+            style: AppStyles.label,
+          ),
+        ],
+      ),
+    );
+  }
 
-            // class list
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.editMode
-                          ? 'Change your class'
-                          : 'Hello, ${widget.name}!',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+  // class list
+  Widget buildClassList(BuildContext context) {
+    return Expanded(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
+          children: [
+            Text(
+              widget.editMode ? 'Change your class' : 'Hello, ${widget.name}!',
+              style: AppStyles.titleMedium,
+            ),
+            Text(
+              'Choose a class that matches your lifestyle.',
+              style: AppStyles.bodyText,
+            ),
+            const SizedBox(height: 8),
+
+            for (CharacterClass c in CharacterClass.values) ...[
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedClass = c;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  margin: const EdgeInsets.only(bottom: AppStyles.smallPadding),
+                  padding: const EdgeInsets.all(AppStyles.mediumPadding),
+                  decoration: BoxDecoration(
+                    color: _selectedClass == c
+                        ? AppColors.panel.withValues(alpha: 0.8)
+                        : AppColors.panel,
+                    border: Border.all(
+                      color: _selectedClass == c
+                          ? AppStyles.classColor(c)
+                          : AppColors.mainBrown,
+                      width: 1.5,
+                    ),
+                    boxShadow: _selectedClass == c 
+                          ? AppStyles.panelShadow 
+                          : null,
+                    borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: AppStyles.classColor(
+                            c,
+                          ).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(
+                            AppStyles.smallRadius,
+                          ),
+                          border: Border.all(
+                            color: AppColors.mainBrown,
+                            width: 1,
+                          ),
+                        ),
+                        child: Icon(
+                          AppStyles.classIcon(c),
+                          color: AppStyles.classColor(c),
+                          size: 26,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Choose a class that matches your lifestyle.',
-                      style: TextStyle(fontSize: 13, color: Colors.black),
-                    ),
-                    const SizedBox(height: AppStyles.largePadding),
+                      const SizedBox(width: AppStyles.mediumPadding),
 
-                    for (CharacterClass c in CharacterClass.values) ...[
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedClass = c;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          margin: const EdgeInsets.only(
-                            bottom: AppStyles.smallPadding,
-                          ),
-                          padding: const EdgeInsets.all(
-                            AppStyles.mediumPadding,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _selectedClass == c
-                                ? AppStyles.classColor(c).withValues(alpha: 0.1)
-                                : const Color.fromARGB(255, 213, 213, 213),
-                            border: Border.all(
-                              color: _selectedClass == c
-                                  ? AppStyles.classColor(c)
-                                  : Colors.transparent,
-                              width: 2,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(c.name, style: AppStyles.titleSmall),
+                                const Spacer(),
+                                Text(
+                                  c.theme,
+                                  style: AppStyles.description,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ],
                             ),
-                            borderRadius: BorderRadius.circular(
-                              AppStyles.mediumRadius,
+                            const SizedBox(height: 1),
+                            Text(
+                              'Daily: ${c.dailyRequirement}',
+                              style: AppStyles.bodyText,
                             ),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 48,
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: AppStyles.classColor(
-                                    c,
-                                  ).withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(
-                                    AppStyles.smallRadius,
-                                  ),
-                                ),
-                                child: Icon(
-                                  AppStyles.classIcon(c),
-                                  color: AppStyles.classColor(c),
-                                  size: 26,
-                                ),
-                              ),
-                              const SizedBox(width: AppStyles.mediumPadding),
-
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          c.name,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: _selectedClass == c
-                                                ? AppStyles.classColor(c)
-                                                : null,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          c.theme,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 3),
-                                    Text(
-                                      'Daily: ${c.dailyRequirement}',
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                    const SizedBox(height: 1),
-                                    Text(
-                                      'Bonus: ${c.bonusDescription}',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: AppStyles.classColor(c),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (_selectedClass == c)
-                                Icon(
-                                  Icons.check_circle,
-                                  color: AppStyles.classColor(c),
-                                  size: 22,
-                                ),
-                            ],
-                          ),
+                            const SizedBox(height: 1),
+                            Text(
+                              'Bonus: ${c.bonusDescription}',
+                              style: AppStyles.bodyText,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Opacity(
+                        opacity: _selectedClass == c ? 1.0 : 0.0,
+                        child: Icon(
+                          Icons.check_circle,
+                          color: AppColors.mainBrown,
+                          size: 20,
                         ),
                       ),
                     ],
-                    const SizedBox(height: 80),
-                  ],
+                  ),
                 ),
               ),
-            ),
-
-            // confirm button
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: finish,
-                  child: Text(widget.editMode ? 'Save' : 'Begin'),
-                ),
-              ),
-            ),
+            ],
           ],
+        ),
+      ),
+    );
+  }
+ 
+  // confirm button
+  Widget buildConfirmButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      child: SizedBox(
+        height: 45,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: finish,
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+              side: BorderSide(color: AppColors.mainBrown, width: 1.5),
+            ),
+          ),
+          child: Text(
+            widget.editMode ? 'Save' : 'Begin',
+            style: AppStyles.titleSmall,
+          ),
         ),
       ),
     );

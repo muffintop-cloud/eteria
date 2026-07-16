@@ -156,4 +156,9 @@ class QuestService {
     }
     _notify();
   } // resetDailyQuests is called every day by NeedsService.triggerDailyReset()
+
+  static Future<void> deleteAllQuests() async {
+    await _box.clear();
+    _notify();
+  }
 }

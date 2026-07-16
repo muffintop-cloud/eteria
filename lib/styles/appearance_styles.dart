@@ -1,3 +1,5 @@
+import 'package:eteria/styles/app_colors.dart';
+import 'package:eteria/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class AppearanceStyles {
@@ -8,7 +10,7 @@ class AppearanceStyles {
 
   // layout constants
   static const double panelHeight = 230.0;
-  static const double panelRadius = 20.0;
+  static const double panelRadius = 10.0;
   static const double tabHeight = 36.0;
   static const double tabRadius = 10.0;
   static const double tileSize = 68.0;
@@ -17,10 +19,10 @@ class AppearanceStyles {
 
   // tabs
   static const List<AppearanceTab> tabs = [
-    AppearanceTab(id: 'body', label: 'Body', icon: Icons.accessibility_new),
-    AppearanceTab(id: 'hair', label: 'Hair', icon: Icons.face_retouching_natural),
-    AppearanceTab(id: 'eyes', label: 'Eyes', icon: Icons.remove_red_eye_outlined),
-    AppearanceTab(id: 'outfits', label: 'Outfits', icon: Icons.checkroom),
+    AppearanceTab(id: 'body', icon: Icons.accessibility_new),
+    AppearanceTab(id: 'hair', icon: Icons.face_retouching_natural),
+    AppearanceTab(id: 'eyes', icon: Icons.remove_red_eye_outlined),
+    AppearanceTab(id: 'outfits', icon: Icons.checkroom),
   ];
 
   // style options per category
@@ -58,21 +60,15 @@ class AppearanceStyles {
   }) {
     if (selected) {
       return BoxDecoration(
-        color: accent.withValues(alpha: 0.12),
+        color: AppColors.background,
         border: Border.all(color: accent, width: 2.5),
         borderRadius: BorderRadius.circular(tileRadius),
-        boxShadow: [
-          BoxShadow(
-            color: accent.withValues(alpha: 0.25),
-            blurRadius: 8,
-            spreadRadius: 1,
-          ),
-        ],
+        boxShadow: AppStyles.panelShadow
       );
     } else {
       return BoxDecoration(
-        color: Colors.grey.shade200,
-        border: Border.all(color: Colors.grey, width: 1),
+        color: AppColors.inactive,
+        border: Border.all(color: AppColors.lightBrown, width: 1.5),
         borderRadius: BorderRadius.circular(tileRadius),
       );
     }
@@ -84,61 +80,50 @@ class AppearanceStyles {
     required Color accent,
     required BuildContext context,
   }) {
-    Color borderColor = active ? accent : Colors.transparent;
-    Color backgroundColor = active ? Colors.grey.shade200 : Colors.grey.shade400;
+    Color borderColor = active ? AppColors.mainBrown : AppColors.mainBrown;
+    Color backgroundColor = active ? AppColors.orange : AppColors.extraLightBrown;
 
     return BoxDecoration(
       color: backgroundColor,
-      border: Border.all(color: borderColor, width: 1.5),
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(tabRadius),
-        topRight: Radius.circular(tabRadius),
+      border: Border(
+        top: BorderSide(color: borderColor, width: 1.5),
+        left: BorderSide(color: borderColor, width: 1.5),
+        right: BorderSide(color: borderColor, width: 1.5),
       ),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(AppStyles.mediumRadius),
+        topRight: Radius.circular(AppStyles.mediumRadius)),
     );
   }
 
   // panel decoration
   static BoxDecoration panelDecoration(BuildContext context) {
     return BoxDecoration(
-      color: Colors.grey.shade100,
+      color: AppColors.panel,
       borderRadius: BorderRadius.circular(panelRadius),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
-          blurRadius: 20,
-          offset: const Offset(0, -4),
-        ),
-      ],
+      border: Border.all(color: AppColors.mainBrown, width: 1.5),
+      boxShadow: AppStyles.panelShadow,
     );
   }
 
-  // tab label text style
-  static TextStyle tabLabelStyle({
-    required bool active,
-    required Color accent,
-    required BuildContext context,
-  }) {
-    Color textColor = active ? accent : Colors.grey;
-    FontWeight weight = active ? FontWeight.bold : FontWeight.normal;
-
-    return TextStyle(fontSize: 10, fontWeight: weight, color: textColor);
+  // options panel decoration
+  static BoxDecoration optionsPanel(BuildContext context) {
+    return BoxDecoration(
+      color: AppColors.panel,
+      borderRadius: BorderRadius.circular(panelRadius),
+      border: Border.all(color: AppColors.darkBrown, width: 1.5),
+      boxShadow: AppStyles.panelShadow,
+    );
   }
-
-  // tile label text style
-  static const TextStyle tileLabelStyle = TextStyle(
-    fontSize: 9,
-    fontWeight: FontWeight.w500);
 }
 
 // tab data
 class AppearanceTab {
   final String id;
-  final String label;
   final IconData icon;
 
   const AppearanceTab({
     required this.id,
-    required this.label,
     required this.icon,
   });
 }

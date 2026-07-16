@@ -1,5 +1,6 @@
 // shows the list of daily quests on the home screen
 
+import 'package:eteria/styles/app_colors.dart';
 import 'package:eteria/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:eteria/models/quest.dart';
@@ -17,7 +18,7 @@ class DailyQuestPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppStyles.mediumPadding),
       decoration: AppStyles.panelDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,16 +26,12 @@ class DailyQuestPanel extends StatelessWidget {
 
           // header
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.wb_sunny_outlined,
-                size: 16,
-                color: Colors.blue,
-              ),
-              const SizedBox(width: 6),
               Text(
-                'Daily Quests',
-                style: AppStyles.titleSmall.copyWith(color: AppStyles.categoryColor(QuestCategory.daily)),
+                'DAILY QUESTS',
+                style: AppStyles.titleMedium,
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -64,7 +61,7 @@ class DailyQuestPanel extends StatelessWidget {
     Quest quest = entry.value;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: AppStyles.smallPadding),
       child: Row(
         children: [
           SizedBox(
@@ -83,12 +80,12 @@ class DailyQuestPanel extends StatelessWidget {
           Expanded(
             child: Text(
               quest.title,
-              style: AppStyles.bodyText.copyWith(
+              style: AppStyles.label.copyWith(
                 decoration: quest.isCompleted
                   ? TextDecoration.lineThrough
                   : TextDecoration.none,
                 color: quest.isCompleted
-                  ? Colors.grey
+                  ? AppColors.lightBrown
                   : null,
               ),
             ),
@@ -128,19 +125,18 @@ class _XpLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color labelColor = getDifficultyColor();
+    final foregroundColor = labelColor == AppColors.red ? AppColors.panel : AppColors.mainBrown;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: AppStyles.smallPadding, vertical: 2),
       decoration: BoxDecoration(
-        border:Border.all(color: labelColor, width: 0.8),
+        border: Border.all(color: AppColors.mainBrown, width: 0.8),
+        color: labelColor,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         '+${xpAmount}XP',
-        style: TextStyle(
-          fontSize: 11, 
-          fontWeight: FontWeight.bold,
-        )
+        style: AppStyles.badgeText.copyWith(color: foregroundColor),
       ),
     );
   }

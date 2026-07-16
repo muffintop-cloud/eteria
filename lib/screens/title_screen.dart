@@ -1,3 +1,5 @@
+import 'package:eteria/styles/app_colors.dart';
+import 'package:eteria/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'character_creation_screen.dart';
 
@@ -25,27 +27,22 @@ class TitleScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 52,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColors.red,
                   letterSpacing: 8,
                   shadows: [
                     Shadow(
-                      color: Colors.black54,
-                      blurRadius: 12,
+                      color: AppColors.mainBrown,
                       offset: Offset(0,4 ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 32),
 
               const Text(
-                'A digital adventure mirrored by your real life.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                  fontStyle: FontStyle.italic,
-                  letterSpacing: 1.5,
-                ),
+                'A digital adventure \nmirrored by your real life.',
+                style: AppStyles.bodyText,
+                textAlign: TextAlign.center
               ),
               const Spacer(flex: 3),
 
@@ -55,11 +52,12 @@ class TitleScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink,
-                      foregroundColor: Colors.black87,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: AppColors.green,
+                      foregroundColor: AppColors.darkBrown,
+                      padding: const EdgeInsets.symmetric(vertical: AppStyles.mediumPadding),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppStyles.mediumRadius),
+                        side: BorderSide(color: AppColors.mainBrown, width: 1.5),
                       ),
                     ),
                     onPressed: () {
@@ -73,11 +71,7 @@ class TitleScreen extends StatelessWidget {
                     },
                     child: const Text(
                       'Start your journey',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                      ),
+                      style: AppStyles.titleSmall,
                     ),
                   ),
                 ),
