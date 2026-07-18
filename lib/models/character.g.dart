@@ -40,15 +40,14 @@ class CharacterAdapter extends TypeAdapter<Character> {
       eyes: fields[21] as String,
       outfit: fields[22] as String,
       unlockedItems: (fields[23] as List?)?.cast<String>(),
-      inventoryItems: (fields[24] as List?)?.cast<InventoryItem>(),
-      lastResetDate: fields[25] as String?,
+      lastResetDate: fields[24] as String?,
     )..unusedSpirit = fields[10] as int;
   }
 
   @override
   void write(BinaryWriter writer, Character obj) {
     writer
-      ..writeByte(26)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -98,8 +97,6 @@ class CharacterAdapter extends TypeAdapter<Character> {
       ..writeByte(23)
       ..write(obj.unlockedItems)
       ..writeByte(24)
-      ..write(obj.inventoryItems)
-      ..writeByte(25)
       ..write(obj.lastResetDate);
   }
 

@@ -1,5 +1,4 @@
 import 'package:eteria/models/character_class.dart';
-import 'package:eteria/models/inventory_item.dart';
 import 'package:eteria/models/quest.dart';
 import 'package:eteria/models/skill.dart';
 import 'package:hive/hive.dart';
@@ -93,7 +92,7 @@ class Character extends HiveObject {
   List<String>? unlockedItems;
 
   @HiveField(24)
-  List<InventoryItem>? inventoryItems;
+  @Deprecated('inventory item removed')
 
   @HiveField(25)
   String? lastResetDate;
@@ -122,11 +121,9 @@ class Character extends HiveObject {
     this.eyes = 'eye_1',
     this.outfit = 'outfit_1',
     List<String>? unlockedItems, // optional constructor parameters, can be null
-    List<InventoryItem>? inventoryItems,
     this.lastResetDate,
   }) {
     this.unlockedItems = unlockedItems ?? []; // if null, initialize as empty list
-    this.inventoryItems = inventoryItems ?? [];
   }
 
   // asset paths for appearance
