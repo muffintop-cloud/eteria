@@ -209,7 +209,7 @@ class Character extends HiveObject {
   } // method to add xp to a skill and handle leveling up
 
   // Needs
-  NeedState needState(int needValue) {
+  static NeedState needState(int needValue) {
     switch(needValue) {
       case 0: return NeedState.depleted;
       case <= 19: return NeedState.critical;
@@ -218,7 +218,7 @@ class Character extends HiveObject {
     }
   } // needs' states based on their values
 
-  int hpPenalty(int needValue) {
+  static int hpPenalty(int needValue) {
     switch(needState(needValue)) {
       case NeedState.stable: return 0;
       case NeedState.low: return 5;

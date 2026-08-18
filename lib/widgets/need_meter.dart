@@ -21,34 +21,8 @@ class NeedMeter extends StatelessWidget {
     this.size = 55,
   });
 
-  NeedState _needState() {
-    switch (rawValue) {
-      case 0:
-        return NeedState.depleted;
-      case <= 19:
-        return NeedState.critical;
-      case <= 49:
-        return NeedState.low;
-      default:
-        return NeedState.stable;
-    }
-  } // converts rawValue into NeedState enum
-
-  int _hpPenalty() {
-    switch (_needState()) {
-      case NeedState.stable:
-        return 0;
-      case NeedState.low:
-        return 5;
-      case NeedState.critical:
-        return 15;
-      case NeedState.depleted:
-        return 30;
-    }
-  } // returns hp penalty for a need's current state
-
   String _stateLabel() {
-    switch (_needState()) {
+    switch (Character.needState(rawValue)) {
       case NeedState.stable:
         return 'Stable';
       case NeedState.low:
@@ -61,7 +35,7 @@ class NeedMeter extends StatelessWidget {
   } // human readable state names
 
   Color _stateColor() {
-    switch (_needState()) {
+    switch (Character.needState(rawValue)) {
       case NeedState.stable:
         return AppColors.green;
       case NeedState.low:
@@ -74,7 +48,7 @@ class NeedMeter extends StatelessWidget {
   } // state label colors
 
   void _showInfoDialog(BuildContext context) {
-    int penalty = _hpPenalty();
+    int penalty = Character.hpPenalty(rawValue);
     String stateText = _stateLabel();
     Color stateColor = _stateColor();
 
@@ -147,7 +121,7 @@ class NeedMeter extends StatelessWidget {
   }
 
   String _stateDescription() {
-    switch (_needState()) {
+    switch (Character.needState(rawValue)) {
       case NeedState.stable:
         return 'This need is well-maintained.';
       case NeedState.low:

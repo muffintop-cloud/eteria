@@ -54,6 +54,26 @@ class ShopCatalogue {
       icon: Icons.face_retouching_natural,
       cosmeticCategory: 'hair',
     ),
+
+    ShopItem(
+      id: 'outfit_3',
+      name: 'Lotus Robe',
+      description: 'A robe of wisdom and serenity.',
+      price: 250,
+      type: ShopItemType.cosmetic,
+      icon: Icons.face_retouching_natural,
+      cosmeticCategory: 'outfits',
+    ),
+
+    ShopItem(
+      id: 'outfit_4',
+      name: 'Midnight Hood',
+      description: 'Comfortable and mysterious, perfect for night adventures.',
+      price: 200,
+      type: ShopItemType.cosmetic,
+      icon: Icons.face_retouching_natural,
+      cosmeticCategory: 'outfits',
+    ),
   ];
 
   static List<ShopItem> get cosmeticItems {
